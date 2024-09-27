@@ -16,7 +16,7 @@ body {
     justify-content: center;
     align-items: center;
     gap : 3px;
-    height: 500px;
+    height: 600px;
     width : 300px;
 }
 
@@ -29,7 +29,7 @@ body {
     height: 20%;
 }
 
-.text {
+.display-text {
     display: flex;
     justify-content: end;
     font-family: 'Seven Segment', sans-serif;
