@@ -2,23 +2,36 @@ let expString = "0";
 let num1, num2;
 let op;
 const display = document.querySelector(".display-text");
+const symbol = document.querySelector(".symbol-text");
 
 function evalulate(num1, num2, op) {
+    let res;
     switch(op) {
         case "+":
-            return num1 + num2;
+            res = num1 + num2;
+            break;
         case "-":
-            return num1 - num2;
+            res = num1 - num2;
+            break;
         case "*":
-            return num1 * num2;
+            res = num1 * num2;
+            break;
         case "/":
-            return num1 / num2;
+            res = num1 / num2;
+            break;
     }
-    return "Error";
+    if(res % 1 !== 0) {
+        res = res.toFixed(4);
+    }
+    return res;
 }
 
 function updateDisplay(text) {
     display.textContent = text;
+}
+
+function updateSymbol(op) {
+    symbol.textContent = op;
 }
 
 let numButtons = document.querySelectorAll(".num-btn");
@@ -48,10 +61,10 @@ undoButton.addEventListener("click", (e) => {
 
 let plusButton = document.querySelector(".plus-btn");
 plusButton.addEventListener("click", (e) => {
+    op = "+";
     if(!num1) {
         num1 = parseFloat(expString);
         expString = "";
-        op = "+";
     }
     else if(!num2) {
         num2 = parseFloat(expString);
@@ -62,14 +75,15 @@ plusButton.addEventListener("click", (e) => {
         num1 = res;
         num2 = undefined;
     }
+    updateSymbol(op);
 });
 
 let minButton = document.querySelector(".min-btn");
 minButton.addEventListener("click", (e) => {
+    op = '-';
     if(!num1) {
         num1 = parseFloat(expString);
         expString = "";
-        op = '-';
     }
     else if(!num2) {
         num2 = parseFloat(expString);
@@ -80,6 +94,45 @@ minButton.addEventListener("click", (e) => {
         num1 = res;
         num2 = undefined;
     }
+    updateSymbol(op);
+});
+
+let mulButton = document.querySelector(".mul-btn");
+mulButton.addEventListener("click", (e) => {
+    op = '*';
+    if(!num1) {
+        num1 = parseFloat(expString);
+        expString = "";
+    }
+    else if(!num2) {
+        num2 = parseFloat(expString);
+        let res = evalulate(num1, num2, op);
+        expString = "";
+        updateDisplay(res);
+        //reset nums
+        num1 = res;
+        num2 = undefined;
+    }
+    updateSymbol(op);
+});
+
+let divButton = document.querySelector(".div-btn");
+divButton.addEventListener("click", (e) => {
+    op = '/';
+    if(!num1) {
+        num1 = parseFloat(expString);
+        expString = "";
+    }
+    else if(!num2) {
+        num2 = parseFloat(expString);
+        let res = evalulate(num1, num2, op);
+        expString = "";
+        updateDisplay(res);
+        //reset nums
+        num1 = res;
+        num2 = undefined;
+    }
+    updateSymbol(op);
 });
 
 let eqlButton = document.querySelector(".eql-btn");
@@ -87,9 +140,10 @@ eqlButton.addEventListener("click", () => {
     console.log(num1, num2, op);
     num2 = parseFloat(expString);
     let res = evalulate(num1, num2, op);
-    updateDisplay(res);
-    expString = "";
-    num1 = res;
+    expString = res;
+    num1 = undefined;
     num2 = undefined;
     op = undefined;
+    updateDisplay(res);
+    updateSymbol(op);
 });
