@@ -1,5 +1,5 @@
 let expString = "0";
-let num1, num2;
+let num1 = undefined, num2 = undefined;
 let op;
 const display = document.querySelector(".display-text");
 const symbol = document.querySelector(".symbol-text");
@@ -13,10 +13,10 @@ function evalulate(num1, num2, op) {
         case "-":
             res = num1 - num2;
             break;
-        case "*":
+        case "x":
             res = num1 * num2;
             break;
-        case "/":
+        case "÷":
             res = num1 / num2;
             break;
     }
@@ -47,9 +47,11 @@ numButtons.forEach((btn) => {
 let ACButton = document.querySelector(".AC-btn");
 ACButton.addEventListener("click", (e) => {
     expString = "0";
-    display.textContent = expString;
+    op = "";
     num1 = undefined;
     num2 = undefined;
+    updateDisplay(expString);
+    updateSymbol(op);
 });
 
 let undoButton = document.querySelector(".undo-btn");
@@ -61,12 +63,17 @@ undoButton.addEventListener("click", (e) => {
 
 let plusButton = document.querySelector(".plus-btn");
 plusButton.addEventListener("click", (e) => {
+    if(!num1 && !num2 && expString == "0") {
+        expString = "+";
+        updateDisplay(expString);
+        return;
+    }
     op = "+";
     if(!num1) {
         num1 = parseFloat(expString);
         expString = "";
     }
-    else if(!num2) {
+    else if(!num2 && expString.length > 0) {
         num2 = parseFloat(expString);
         let res = evalulate(num1, num2, op);
         expString = "";
@@ -80,12 +87,17 @@ plusButton.addEventListener("click", (e) => {
 
 let minButton = document.querySelector(".min-btn");
 minButton.addEventListener("click", (e) => {
+    if(!num1 && !num2 && expString == "0") {
+        expString = "-";
+        updateDisplay(expString);
+        return;
+    }
     op = '-';
     if(!num1) {
         num1 = parseFloat(expString);
         expString = "";
     }
-    else if(!num2) {
+    else if(!num2 && expString.length > 0) {
         num2 = parseFloat(expString);
         let res = evalulate(num1, num2, op);
         expString = "";
@@ -99,12 +111,12 @@ minButton.addEventListener("click", (e) => {
 
 let mulButton = document.querySelector(".mul-btn");
 mulButton.addEventListener("click", (e) => {
-    op = '*';
+    op = 'x';
     if(!num1) {
         num1 = parseFloat(expString);
         expString = "";
     }
-    else if(!num2) {
+    else if(!num2 && expString.length > 0) {
         num2 = parseFloat(expString);
         let res = evalulate(num1, num2, op);
         expString = "";
@@ -118,14 +130,17 @@ mulButton.addEventListener("click", (e) => {
 
 let divButton = document.querySelector(".div-btn");
 divButton.addEventListener("click", (e) => {
-    op = '/';
+    op = '÷';
     if(!num1) {
         num1 = parseFloat(expString);
         expString = "";
     }
-    else if(!num2) {
+    else if(!num2 && expString.length > 0) {
         num2 = parseFloat(expString);
         let res = evalulate(num1, num2, op);
+        if(res == Infinity) {
+            res = "Haha nice try ;-)";
+        }
         expString = "";
         updateDisplay(res);
         //reset nums
@@ -137,13 +152,27 @@ divButton.addEventListener("click", (e) => {
 
 let eqlButton = document.querySelector(".eql-btn");
 eqlButton.addEventListener("click", () => {
-    console.log(num1, num2, op);
+    if(expString.length == 0) {
+        return;
+    }
     num2 = parseFloat(expString);
     let res = evalulate(num1, num2, op);
+    if(res == Infinity) {
+        res = "Haha nice try ;-)";
+    }
     expString = res;
     num1 = undefined;
     num2 = undefined;
     op = undefined;
     updateDisplay(res);
     updateSymbol(op);
+});
+
+let dotButton = document.querySelector(".dot-btn");
+dotButton.addEventListener("click", () => {
+    if(expString.includes(".")) {
+        return;
+    }
+    expString += ".";
+    updateDisplay(expString);
 });
